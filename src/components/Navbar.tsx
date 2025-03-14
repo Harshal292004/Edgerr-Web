@@ -4,7 +4,11 @@ import { useThemeStore } from "@/lib/store";
 import { space_mono, space_mono_italic } from "@/lib/fonts";
 import { Sun, Moon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 const Navbar = () => {
+
+  const pathname= usePathname()
+
   {
     /*Theme in the zustand store*/
   }
@@ -31,6 +35,8 @@ const Navbar = () => {
   };
 
   return (
+
+    pathname === '/'?<></>:
     <nav
       className="
         sticky top-0 z-50 w-full h-16 flex items-center justify-between px-6
