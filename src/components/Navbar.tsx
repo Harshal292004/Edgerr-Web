@@ -5,92 +5,106 @@ import { space_mono, space_mono_italic } from "@/lib/fonts";
 import { Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+
 const Navbar = () => {
-
-  const pathname= usePathname()
-
-  {
-    /*Theme in the zustand store*/
-  }
+  const pathname = usePathname();
   const theme = useThemeStore((state) => state.theme);
-  {
-    /*Helps to toggle the theme in zustand*/
-  }
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
-  {
-    /*useEffect used for toggling dark class*/
-  }
   useEffect(() => {
-    theme === "dark"
-      ? document.documentElement.classList.add("dark")
-      : document.documentElement.classList.remove("dark");
+    document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
-  {
-    /*Handle theme toggle on the ui*/
-  }
-  const handleThemeToggle = () => {
-    toggleTheme();
+  const handleThemeToggle = () => toggleTheme();
+
+  const navVariants = {
+    hidden: { y: -20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
+  };
+
+  const linkHover = {
+    hover: { scale: 1.05 },
+    tap: { scale: 0.95 },
   };
 
   return (
+    <>
+    <motion.button
+        onClick={handleThemeToggle}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="
+          p-3 rounded-full fixed bottom-8 right-8
+          backdrop-blur-lg border
+          dark:bg-black/20 dark:border-yellow-400/30 dark:hover:bg-yellow-400/10
+          bg-white/30 border-cyan-600/30 hover:bg-cyan-500/10
+          transition-all duration-300 shadow-lg
+          z-50
+        "
+      >
+        {theme === "dark" ? (
+          <Sun className="h-6 w-6 text-yellow-400" />
+        ) : (
+          <Moon className="h-6 w-6 text-cyan-600" />
+        )}
+      </motion.button>
 
-    pathname === '/'?<></>:
-    <nav
-      className="
-        sticky top-0 z-50 w-full h-16 flex items-center justify-between px-6
-        backdrop-blur-xl backdrop-saturate-150
-        dark:bg-black/10 dark:text-white  bg-white text-gray-800 
-        transition-all duration-300 ease-in-out
-      "
-    >
-      <div className={`font-bold text-xl ${space_mono_italic.className}`}>
-        <span className="dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-blue-400 dark:to-purple-500 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 ">
-          Edgerr
-        </span>
-      </div>
-
-      <div className="flex items-center gap-6">
-        <ul className="hidden md:flex space-x-6 mr-6">
-          {["Home", "Features", "About", "Contact"].map((item) => (
-            <Link
-              key={item}
-              className={`
-                cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 
-                after:transition-all after:duration-300 hover:after:w-full
-                ${
-                  theme === "dark" ? "after:bg-blue-400" : "after:bg-blue-500"
-                }`}
-              href={""}
-            >
-              {item}
-            </Link>
-          ))}
-        </ul>
-
-        <button
-          onClick={handleThemeToggle}
-          className={`
-              p-2 rounded-full
-              backdrop-blur-md
-              ${
-                theme === "dark"
-                  ? "bg-white/5 hover:bg-white/10 border border-white/10"
-                  : "bg-black/5 hover:bg-black/10 border border-black/10"
-              }
-              transition-all duration-300
-            `}
-          aria-label="Toggle theme"
+      {pathname !== '/' && (
+        <motion.nav
+          initial="hidden"
+          animate="visible"
+          variants={navVariants}
+          className="
+            sticky top-0 z-50 w-full h-16 flex items-center justify-between px-6
+            backdrop-blur-xl backdrop-saturate-150 border-b
+            dark:bg-black/20 dark:border-white/10
+            bg-white/30 bg-blend-overlay border-gray-200/50
+            transition-all duration-300 ease-in-out
+          "
         >
-          {theme === "dark" ? (
-            <Sun className="h-5 w-5 text-yellow-300" />
-          ) : (
-            <Moon className="h-5 w-5 text-blue-800" />
-          )}
-        </button>
-      </div>
-    </nav>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className={`font-bold text-xl ${space_mono_italic.className}`}
+          >
+            <span className="
+              dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-yellow-400 dark:to-yellow-600 
+              text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-500
+            ">
+              Edgerr
+            </span>
+          </motion.div>
+
+          <div className="flex items-center gap-6">
+            <ul className="hidden md:flex space-x-6 mr-6">
+              {["Home", "Features", "About", "Contact"].map((item) => (
+                <motion.li
+                  key={item}
+                  variants={linkHover}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Link
+                    href="#"
+                    className={`
+                      cursor-pointer relative py-1.5 px-3 rounded-lg
+                      transition-all duration-300
+                      dark:hover:bg-yellow-400/10 dark:text-gray-200
+                      hover:bg-cyan-500/10 text-gray-600
+                      ${space_mono.className}
+                    `}
+                  >
+                    {item}
+                  </Link>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+        </motion.nav>
+      )}
+
+      
+    </>
   );
 };
 
