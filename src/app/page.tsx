@@ -5,12 +5,13 @@ import { motion } from 'framer-motion';
 import { Space_Mono } from 'next/font/google';
 import { Github } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
 const spaceMono = Space_Mono({
   weight: '700',
   subsets: ['latin'],
 });
 
-export default function HeroSection() {
+export default function Home() {
   const [isLoggedIn,setIsLoggedIn]=useState(true)
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -21,6 +22,12 @@ export default function HeroSection() {
     hover: { scale: 1.05 },
     tap: { scale: 0.95 },
   };
+
+  const router=useRouter()
+
+  const handleRouteChange=({href}:{href:string})=>{
+    router.push(href)
+  }
 
   return (
     <div className="min-h-screen transition-colors duration-300  dark:bg-black bg-[#f0f7ff]">
@@ -48,6 +55,7 @@ export default function HeroSection() {
 
             {isLoggedIn ? (
               <motion.button
+              onClick={()=>handleRouteChange({href:"/dashboard"})}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-3 rounded-full font-semibold transition-colors dark:bg-yellow-400 dark:text-black dark:hover:bg-yellow-300 bg-cyan-600 text-white hover:bg-cyan-500"
@@ -77,7 +85,7 @@ export default function HeroSection() {
 
             {/* GitHub Link */}
             <motion.a
-              href="https://github.com/your-repo"
+              href="https://github.com/Harshal292004/Edgerr-Web"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
