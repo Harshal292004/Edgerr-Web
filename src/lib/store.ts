@@ -65,12 +65,12 @@ export type ThemeActions = {
 
 export const useThemeStore = create<ThemeState & ThemeActions>((set) => {
   return {
-    theme: THEME.DARK,
+    theme: THEME.BRIGHT,
     toggleTheme: () =>
       set(
         (state) => {
             return {
-            theme: state.theme === THEME.DARK ? THEME.BRIGHT : THEME.DARK,
+            theme: state.theme === THEME.BRIGHT ? THEME.DARK : THEME.BRIGHT,
             };
         }
     ),
