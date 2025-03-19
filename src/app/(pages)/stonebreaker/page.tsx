@@ -178,7 +178,7 @@ const page = () => {
             ${theme === "dark" ? "text-white" : "text-gray-800"}
           `}
           >
-            Stone Breaker
+            
           </h1>
         </div>
 
