@@ -2,34 +2,39 @@
 import React, { useState } from "react";
 import { useThemeStore } from "@/lib/store";
 import { space_mono } from "@/lib/fonts";
-import { UserCircle, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { LogOut, LayoutDashboard ,DatabaseBackup, Code} from "lucide-react";
 import {
   Database,
-  Home,
-  Settings,
-  Users,
   Plus,
-  Code,
   Send,
   ChevronLeft,
   ChevronRight,
   ServerCrash,
 } from "lucide-react";
 import { motion } from "framer-motion";
+
+
+type database={
+  id: string,
+  name: string
+}
+
+
 const page = () => {
   const theme = useThemeStore((state) => state.theme);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [prompt, setPrompt] = useState("SELECT * FROM users WHERE");
-  const [databases, setDatabases] = useState([]);
+  const [databases, setDatabases] = useState<database[]>([]);
 
   // Toggle sidebar collapse state
   const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   // Handle prompt input change
-  const handlePromptChange = (e) => setPrompt(e.target.value);
+  const handlePromptChange = (e:any) => setPrompt(e.target.value);
 
   // Handle prompt submission
-  const handleSubmitPrompt = (e) => {
+  const handleSubmitPrompt = (e:any) => {
     e.preventDefault();
     // Process prompt here
     console.log("Processing prompt:", prompt);
@@ -39,107 +44,116 @@ const page = () => {
   const handleAddDatabase = () => {
     const newDb = {
       id: `db-${databases.length + 1}`,
-      name: `Database ${databases.length + 1}`,
-      tables: Math.floor(Math.random() * 10) + 1,
+      name: `Database ${databases.length + 1}`
     };
     setDatabases([...databases, newDb]);
   };
 
+  const router=useRouter()
+  const handleRouteChange=({href}:{href:string})=>{
+    router.push(href)
+  }
   return (
     <div
-      className={`flex min-h-screen ${
-        theme === "dark" ? "bg-gray-900" : "bg-gray-50"
-      }`}
+      className="flex min-h-screen"
     >
-      {/* Sidebar */}
+      
       <div className="absolute inset-0 transition-all duration-500  bg-gradient-to-br from-cyan-400 via-blue-300 to-green-200  dark:from-black dark:via-gray-900 dark:to-black" />
-
-      <div
+      
+      {/* Sidebar */}
+      <motion.div
+        initial={{opacity:0}}
+        animate={{opacity:1}}
         className={`
-          ${sidebarCollapsed ? "w-16" : "w-64"} 
+          ${sidebarCollapsed ? "w-20" : "w-64"} 
           h-screen fixed left-0 top-0 
           transition-all duration-300 ease-in-out
-          ${
-            theme === "dark"
-              ? "bg-black/30 border-r border-white/5 text-white"
-              : "bg-white/80 border-r border-gray-200/50 text-gray-800"
-          }
+          dark:border-r dark:border-white/5
+          border-r border-gray-200/50 text-gray-800
           backdrop-blur-xl backdrop-saturate-150
-          z-10
+          flex flex-col
         `}
       >
-        <div className="flex flex-col h-full">
           {/* Navigation */}
 
           <nav className="mt-10 flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-            <div className="flex flex-col gap-2 justify-center items-center p-2">
+            <div className="flex flex-col gap-2 justify-center items-center p-6">
               <motion.div
-                onClick={() => {}}
-                className={`cursor-pointer py-2 px-4 rounded-lg
+                onClick={() => {handleRouteChange({href:"/dashboard"})}}
+                className={`cursor-pointer p-4 rounded-lg
             transition-all duration-300
-            dark:hover:bg-yellow-400/20 dark:text-gray-200
-            hover:bg-cyan-500/20 text-gray-600
+            dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
+      hover:bg-cyan-500/20
             ${space_mono.className}
             flex items-center justify-center sm:justify-between
             w-full sm:w-auto`}
                 whileHover="hover"
                 whileTap="tap"
               >
-                <UserCircle className="mr-2 h-5 w-5" />
-                <p className="text-sm sm:text-base">Harshal Malani</p>
+                <LayoutDashboard className="mr-2 h-8 w-8" />
+                {!sidebarCollapsed?   <p className="text-2xl">Dashboard</p>:null}
               </motion.div>
 
               <motion.div
-                className={`cursor-pointer py-2 px-4 rounded-lg
+                onClick={() => {handleRouteChange({href:"/codd/queries"})}}
+                className={`cursor-pointer p-4 rounded-lg
       transition-all duration-300
-      dark:hover:bg-red-400/20 dark:text-gray-200
-      hover:bg-red-500/20 text-gray-600
+      dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
+      hover:bg-cyan-500/20 
       ${space_mono.className}
       flex items-center justify-center sm:justify-between
       w-full sm:w-auto`}
                 whileHover="hover"
                 whileTap="tap"
               >
-                <LogOut className="mr-2 h-5 w-5" />
-                <p className="text-sm sm:text-base">Queries</p>
+                <Code className="mr-2 h-8 w-8" />
+                {!sidebarCollapsed?<p className="text-2xl">Queries</p>:null}
               </motion.div>
 
               <motion.div
-                className={`cursor-pointer py-2 px-4 rounded-lg
+                onClick={() => {handleRouteChange({href:"/codd/databases"})}}
+                className={`cursor-pointer p-4 rounded-lg
       transition-all duration-300
-      dark:hover:bg-red-400/20 dark:text-gray-200
-      hover:bg-red-500/20 text-gray-600
+     dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
+      hover:bg-cyan-500/20
       ${space_mono.className}
       flex items-center justify-center sm:justify-between
       w-full sm:w-auto`}
                 whileHover="hover"
                 whileTap="tap"
               >
-                <LogOut className="mr-2 h-5 w-5" />
-                <p className="text-sm sm:text-base">Connect Database</p>
+                <DatabaseBackup className="mr-2 h-8 w-8" />
+                {!sidebarCollapsed?<p className="text-2xl">Databases</p>:null}
               </motion.div>
             </div>
           </nav>
 
           {/* Toggle button */}
-          <div className="flex justify-end p-4">
-            <button
-              onClick={toggleSidebar}
-              className={`
-                p-2 rounded-full
-                ${
-                  theme === "dark"
-                    ? "bg-white/5 hover:bg-white/10"
-                    : "bg-black/5 hover:bg-black/10"
-                }
-                transition-all duration-200
-              `}
-            >
-              {sidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
-            </button>
-          </div>
-        </div>
-      </div>
+          <motion.button
+        onClick={toggleSidebar}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className={`
+          p-2 rounded-full fixed bottom-8 right-8
+          backdrop-blur-lg border
+          dark:bg-black/20 dark:border-yellow-400/30 dark:hover:bg-yellow-400/10
+          bg-white/30 border-cyan-600/30 hover:bg-cyan-500/10
+          transition-all duration-300 shadow-lg
+          z-50
+         
+        `}
+      >
+        {sidebarCollapsed ? (
+          <ChevronRight className={` ${sidebarCollapsed?"ml-20":""} h-8 w-8 text-cyan-600 dark:text-yellow-400 `} />
+        ) : (
+          <ChevronLeft className={` ${sidebarCollapsed?"ml-20":""} h-8 w-8 text-cyan-600 dark:text-yellow-400 `}  />
+        )}
+      </motion.button>
+
+
+        
+     
+      </motion.div>
 
       {/* Main content */}
       <div
@@ -253,7 +267,7 @@ const page = () => {
                     }
                   `}
                   >
-                    {db.tables} Tables
+                     Tables
                   </span>
                 </div>
                 <h3
