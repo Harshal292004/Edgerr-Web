@@ -158,36 +158,34 @@ const page = () => {
         </motion.button>
       </motion.div>
 
-      {/* Main content */}
+      {/*Main Content*/}
       <motion.div
-        className={`flex-1 transition-all duration-300 flex flex-col items-center ${
+        className={`flex flex-col items-center justify-start w-full min-h-screen pt-20 transition-all duration-300 ${
           sidebarCollapsed ? "ml-20" : "ml-64"
         }`}
       >
-       
-
         {/* Animated StoneBreaker Header */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className={`fixed transition-all duration-500 z-30 ${
+          className={`transition-all duration-500 z-30 ${
             isPromptSubmitted
-              ? `${sidebarCollapsed ? "left-24" : "left-72"} top-6`
-              : "left-1/2 top-[30%] -translate-x-1/2"
+              ? `fixed ${sidebarCollapsed ? "left-20" : "left-60"} top-20`
+              : "relative mb-8"
           }`}
         >
           <motion.div
-            animate={{ 
+            animate={{
               opacity: isPromptSubmitted ? 0.7 : 1,
-              scale: isPromptSubmitted ? 0.7 : 1 
+              scale: isPromptSubmitted ? 0.7 : 1,
             }}
             className="text-center"
           >
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className={`${space_mono.className} text-4xl font-bold mb-2
-              dark:text-yellow-400 text-cyan-600`}
+              className={`${space_mono.className} text-5xl font-bold mb-2
+        dark:text-yellow-400 text-cyan-600`}
             >
               StoneBreaker
             </motion.h1>
@@ -195,88 +193,14 @@ const page = () => {
             <motion.p
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className={`${josefin_sans.className} dark:text-gray-300 text-gray-600 text-sm`}
+              className={`${josefin_sans.className} dark:text-gray-300 text-gray-600 text-xl`}
             >
               Your SQL Query Assistant
             </motion.p>
           </motion.div>
         </motion.div>
-
-        {/* Input Container */}
-        <motion.div
-          className={`w-full max-w-3xl px-4 transition-all duration-500 ${
-            isPromptSubmitted ? "mt-4" : "mt-12"
-          }`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div
-            className={`w-full rounded-xl shadow-lg border dark:border-gray-700 border-gray-300
-                      bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm
-                      focus-within:ring-2 focus-within:ring-cyan-500 dark:focus-within:ring-yellow-400
-                      text-cyan-600 dark:text-yellow-400 overflow-hidden`}
-          >
-            <textarea
-              value={prompt}
-              onChange={handlePromptChange}
-              placeholder="Enter your SQL prompt here..."
-              className={`w-full p-4 min-h-32 bg-transparent resize-none
-                          focus:outline-none
-                          text-cyan-600 dark:text-yellow-400 text-lg ${fira_code.className}`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && e.ctrlKey) {
-                  handleSubmitPrompt();
-                }
-              }}
-            />
-
-            <div className="flex flex-row justify-between p-2  dark:border-gray-700 border-gray-300">
-              <motion.div
-                onClick={handleAddDatabase}
-                className={`cursor-pointer p-3 rounded-lg
-                        transition-all duration-300
-                        dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
-                        hover:bg-cyan-500/20 ${space_mono.className}
-                        flex items-center gap-2`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Plus className="h-5 w-5" />
-                <p className="text-sm">Connect Database</p>
-              </motion.div>
-
-              <div className="flex flex-row items-center gap-2">
-                <motion.button
-                  className={`cursor-pointer p-3 rounded-lg
-                          transition-all duration-300
-                          dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
-                          hover:bg-cyan-500/20 ${space_mono.className}
-                          flex items-center justify-center`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Mic className="h-5 w-5" />
-                </motion.button>
-
-                <motion.button
-                  onClick={handleSubmitPrompt}
-                  className={`cursor-pointer p-3 rounded-lg
-                          transition-all duration-300
-                          dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
-                          hover:bg-cyan-500/20 ${space_mono.className}
-                          flex items-center justify-center`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <ArrowUp className="h-5 w-5" />
-                </motion.button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Results area - appears after submission */}
-        {isPromptSubmitted && (
+{/* Results area - appears after submission */}
+{isPromptSubmitted && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -284,7 +208,7 @@ const page = () => {
           >
             <div
               className="w-full rounded-xl shadow-lg border dark:border-gray-700 border-gray-300
-                        bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm p-6 min-h-64"
+                  bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm p-6 min-h-64"
             >
               <h2
                 className={`${space_mono.className} text-xl font-bold mb-4 dark:text-yellow-400 text-cyan-600`}
@@ -299,6 +223,80 @@ const page = () => {
             </div>
           </motion.div>
         )}
+        {/* Input Container */}
+        <motion.div
+          className={`w-full max-w-3xl px-4 ${
+            isPromptSubmitted ? "mt-8" : "mt-4"
+          }`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div
+            className={`w-full rounded-xl shadow-lg border dark:border-gray-700 border-gray-300
+                bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm
+                focus-within:ring-2 focus-within:ring-cyan-500 dark:focus-within:ring-yellow-400
+                text-cyan-600 dark:text-yellow-400 overflow-hidden`}
+          >
+            <textarea
+              value={prompt}
+              onChange={handlePromptChange}
+              placeholder="Enter your SQL prompt here..."
+              className={`w-full p-4 min-h-16 bg-transparent resize-none
+                    focus:outline-none
+                    text-cyan-600 dark:text-yellow-400 text-lg ${fira_code.className}`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && e.ctrlKey) {
+                  handleSubmitPrompt();
+                }
+              }}
+            />
+
+            <div className="flex flex-row justify-between p-2 border-t dark:border-gray-700 border-gray-300">
+              <motion.div
+                onClick={handleAddDatabase}
+                className={`cursor-pointer p-3 rounded-lg
+                  transition-all duration-300
+                  dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
+                  hover:bg-cyan-500/20 ${space_mono.className}
+                  flex items-center gap-2`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Plus className="h-5 w-5" />
+                <p className="text-sm">Connect Database</p>
+              </motion.div>
+
+              <div className="flex flex-row items-center gap-2">
+                <motion.button
+                  className={`cursor-pointer p-3 rounded-lg
+                    transition-all duration-300
+                    dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
+                    hover:bg-cyan-500/20 ${space_mono.className}
+                    flex items-center justify-center`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Mic className="h-5 w-5" />
+                </motion.button>
+
+                <motion.button
+                  onClick={handleSubmitPrompt}
+                  className={`cursor-pointer p-3 rounded-lg
+                    transition-all duration-300
+                    dark:hover:bg-yellow-400/20 dark:text-yellow-400 text-cyan-700
+                    hover:bg-cyan-500/20 ${space_mono.className}
+                    flex items-center justify-center`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ArrowUp className="h-5 w-5" />
+                </motion.button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        
       </motion.div>
     </div>
   );
